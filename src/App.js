@@ -1,24 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import Login from "./components/Auth/Login";
+import Register from "./components/Auth/Register";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
+  const [isAuth, setIsAuth] = useState(!!localStorage.getItem("token"));
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setIsAuth(!!localStorage.getItem("token"));
+    };
+
+    // Listen to token changes
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login onLogin={() => setIsAuth(true)} />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={isAuth ? <Dashboard /> : <Navigate to="/login" />} />
+        <Route path="/" element={<Navigate to="/dashboard" />} />
+      </Routes>
+    </Router>
   );
 }
 
