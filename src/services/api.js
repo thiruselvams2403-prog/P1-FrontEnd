@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: "http://localhost:5010/api" });
+const API = axios.create({ baseURL: " https://elmer-nonsupposed-debatably.ngrok-free.dev/api" });
 
 // Attach token automatically if logged in
 API.interceptors.request.use((req) => {
